@@ -1,4 +1,3 @@
-> Любимый Павлик:
 from aiogram import types
 from aiogram.dispatcher import Dispatcher
 from openai_client import generate_text
