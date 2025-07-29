@@ -81,7 +81,7 @@ def register_handlers(dp: Dispatcher):
     async def successful_payment(msg: types.Message):
         expiry = get_subscription_expiry()
         activate_subscription(msg.from_user.id, expiry)
-        await msg.answer(f"✅ Подписка активирована до {expiry}! \n Спасибо за оплату 💙")
+        await msg.answer(f"✅ Подписка активирована до {expiry}!\nСпасибо за оплату 💙")
 
     @dp.message_handler(commands=["check"])
     async def check_subscription(msg: types.Message):
@@ -90,13 +90,13 @@ def register_handlers(dp: Dispatcher):
         else:
             await msg.answer("🚫 Подписка не найдена или истекла.")
 
-@dp.message_handler()
-async def handle_prompt(msg: types.Message):
-    user_id = msg.from_user.id
-    if not is_subscribed(user_id) and get_usage(user_id) >= FREE_LIMIT:
-        await msg.answer("⚠️ Ты исчерпал лимит бесплатных генераций. \n Оформи подписку, чтобы продолжить.")
-        return
-    await msg.answer("✍ Генерирую текст...")
-    reply = await generate_text(msg.text)
-    await msg.answer(reply)
-    increment_usage(user_id)
+    @dp.message_handler()
+    async def handle_prompt(msg: types.Message):
+        user_id = msg.from_user.id
+        if not is_subscribed(user_id) and get_usage(user_id) >= FREE_LIMIT:
+            await msg.answer("⚠️ Ты исчерпал лимит бесплатных генераций.\nОформи подписку, чтобы продолжить.")
+            return
+        await msg.answer("✍ Генерирую текст...")
+        reply = await generate_text(msg.text)
+        await msg.answer(reply)
+        increment_usage(user_id)
