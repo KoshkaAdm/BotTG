@@ -94,7 +94,7 @@ def register_handlers(dp: Dispatcher):
     async def handle_prompt(msg: types.Message):
         user_id = msg.from_user.id
         if not is_subscribed(user_id) and get_usage(user_id) >= FREE_LIMIT:
-            await msg.answer("⚠️ Ты исчерпал лимит бесплатных генераций.\nОформи подписку, чтобы продолжить.")
+            await msg.answer("⚠️ Ты исчерпал лимит бесплатных генераций. \n Оформи подписку, чтобы продолжить.")
             return
         await msg.answer("✍ Генерирую текст...")
         reply = await generate_text(msg.text)
