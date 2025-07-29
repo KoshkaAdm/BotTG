@@ -109,8 +109,7 @@ async def checkout(pre_checkout_q: types.PreCheckoutQuery, bot):
 async def successful_payment(msg: types.Message):
     expiry = get_subscription_expiry()
     activate_subscription(msg.from_user.id, expiry)
-    await msg.answer(f"✅ Подписка активирована до {expiry}!
-Спасибо за оплату 💙")
+    await msg.answer(f"✅ Подписка активирована до {expiry}! Спасибо за оплату 💙")
 
 @router.message(Command("check"))
 async def check_subscription(msg: types.Message):
