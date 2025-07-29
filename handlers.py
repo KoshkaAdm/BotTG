@@ -13,20 +13,20 @@ FREE_LIMIT = 10
 
 @dp.message_handler(commands=["start"])
 async def start_cmd(msg: types.Message):
-    await msg.answer("РџСЂРёРІРµС‚! РЇ Р±РѕС‚ В«РўРѕ С‡С‚Рѕ РЅР°РґРѕВ» рџ‘‹\n\nР“РµРЅРµСЂРёСЂСѓСЋ С‚РµРєСЃС‚С‹, С‚Р°Р±Р»РёС†С‹ Рё Р»РѕРіРѕ. РќР°РїРёС€Рё С‚РµРјСѓ, Рё СЏ СЃРѕР·РґР°Рј С‚РµРєСЃС‚!")
+    await msg.answer("Привет! Я бот «То что надо» 👋\n\nГенерирую тексты, таблицы и лого. Напиши тему, и я создам текст!")
 
-@dp.message_handler(lambda msg: msg.text.lower().startswith("Р»РѕРіРѕС‚РёРї "))
+@dp.message_handler(lambda msg: msg.text.lower().startswith("логотип "))
 async def handle_logo(msg: types.Message):
     from logo_generator import generate_logo
     user_id = msg.from_user.id
     if not is_subscribed(user_id) and get_usage(user_id) >= FREE_LIMIT:
-        await msg.answer("вљ пёЏ Р›РёРјРёС‚ Р±РµСЃРїР»Р°С‚РЅС‹С… РіРµРЅРµСЂР°С†РёР№ Р»РѕРіРѕС‚РёРїРѕРІ РёСЃС‡РµСЂРїР°РЅ. РћС„РѕСЂРјРё РїРѕРґРїРёСЃРєСѓ.")
+        await msg.answer("⚠️ Лимит бесплатных генераций логотипов исчерпан. Оформи подписку.")
         return
     prompt = msg.text[8:].strip()
-    await msg.answer("рџЋЁ Р“РµРЅРµСЂРёСЂСѓСЋ Р»РѕРіРѕС‚РёРї...")
+    await msg.answer("🎨 Генерирую логотип...")
     url = await generate_logo(prompt)
     if url.startswith("http"):
-        await msg.answer_photo(url, caption="Р’РѕС‚ Р»РѕРіРѕС‚РёРї!")
+        await msg.answer_photo(url, caption="Вот логотип!")
     else:
         await msg.answer(url)
     increment_usage(user_id)
@@ -34,15 +34,15 @@ async def handle_logo(msg: types.Message):
 @dp.message_handler(commands=["create_table"])
 async def create_table(msg: types.Message):
     url = create_user_sheet(msg.from_user.id)
-    await msg.answer(f"вњ… РўР°Р±Р»РёС†Р° СЃРѕР·РґР°РЅР°: {url}")
+    await msg.answer(f"✅ Таблица создана: {url}")
 
 @dp.message_handler(commands=["sheet_link"])
 async def get_sheet_link(msg: types.Message):
     try:
         url = f"https://docs.google.com/spreadsheets/d/UserSheet_{msg.from_user.id}"
-        await msg.answer(f"рџ“Ћ Р’Р°С€Р° С‚Р°Р±Р»РёС†Р°: {url}")
+        await msg.answer(f"📎 Ваша таблица: {url}")
     except:
-        await msg.answer("вљ пёЏ РўР°Р±Р»РёС†Р° РїРѕРєР° РЅРµ СЃРѕР·РґР°РЅР°. РСЃРїРѕР»СЊР·СѓР№ /create_table")
+        await msg.answer("⚠️ Таблица пока не создана. Используй /create_table")
 
 @dp.message_handler(commands=["add_expense"])
 async def add_expense_cmd(msg: types.Message):
@@ -51,24 +51,24 @@ async def add_expense_cmd(msg: types.Message):
         amount = parts[1]
         category = parts[2]
         append_expense(msg.from_user.id, amount, category)
-        await msg.answer("рџ’ё Р Р°СЃС…РѕРґ РґРѕР±Р°РІР»РµРЅ РІ С‚Р°Р±Р»РёС†Сѓ.")
+        await msg.answer("💸 Расход добавлен в таблицу.")
     except:
-        await msg.answer("вљ пёЏ Р¤РѕСЂРјР°С‚: /add_expense 500 РњР°СЂРєРµС‚РёРЅРі")
+        await msg.answer("⚠️ Формат: /add_expense 500 Маркетинг")
 
 @dp.message_handler(commands=["add_task"])
 async def add_task_cmd(msg: types.Message):
     try:
         task = msg.text.split(maxsplit=1)[1]
         append_task(msg.from_user.id, task)
-        await msg.answer("рџ“Њ Р—Р°РґР°С‡Р° РґРѕР±Р°РІР»РµРЅР° РІ С‚Р°Р±Р»РёС†Сѓ.")
+        await msg.answer("📌 Задача добавлена в таблицу.")
     except:
-        await msg.answer("вљ пёЏ Р¤РѕСЂРјР°С‚: /add_task РЎРґРµР»Р°С‚СЊ Р»РµРЅРґРёРЅРі")
+        await msg.answer("⚠️ Формат: /add_task Сделать лендинг")
 
 @dp.message_handler(commands=["buy"])
 async def buy_cmd(msg: types.Message):
     await msg.answer_invoice(
-        title="РџРѕРґРїРёСЃРєР° РЅР° Р±РѕС‚Р°",
-        description="РЎРЅСЏС‚РёРµ Р»РёРјРёС‚РѕРІ Рё РїРѕР»РЅС‹Р№ РґРѕСЃС‚СѓРї РЅР° 30 РґРЅРµР№",
+        title="Подписка на бота",
+        description="Снятие лимитов и полный доступ на 30 дней",
         provider_token=PROVIDER_TOKEN,
         currency="RUB",
         prices=price,
@@ -84,23 +84,22 @@ async def checkout(pre_checkout_q: types.PreCheckoutQuery):
 async def successful_payment(msg: types.Message):
     expiry = get_subscription_expiry()
     activate_subscription(msg.from_user.id, expiry)
-    await msg.answer(f"вњ… РџРѕРґРїРёСЃРєР° Р°РєС‚РёРІРёСЂРѕРІР°РЅР° РґРѕ {expiry}!
-РЎРїР°СЃРёР±Рѕ Р·Р° РѕРїР»Р°С‚Сѓ рџ’™")
+    await msg.answer(f"✅ Подписка активирована до {expiry}! Спасибо за оплату 💙")
 
 @dp.message_handler(commands=["check"])
 async def check_subscription(msg: types.Message):
     if is_subscribed(msg.from_user.id):
-        await msg.answer("вњ… РЈ С‚РµР±СЏ Р°РєС‚РёРІРЅР°СЏ РїРѕРґРїРёСЃРєР°!")
+        await msg.answer("✅ У тебя активная подписка!")
     else:
-        await msg.answer("рџљ« РџРѕРґРїРёСЃРєР° РЅРµ РЅР°Р№РґРµРЅР° РёР»Рё РёСЃС‚РµРєР»Р°.")
+        await msg.answer("🚫 Подписка не найдена или истекла.")
 
 @dp.message_handler()
 async def handle_prompt(msg: types.Message):
     user_id = msg.from_user.id
     if not is_subscribed(user_id) and get_usage(user_id) >= FREE_LIMIT:
-        await msg.answer("вљ пёЏ РўС‹ РёСЃС‡РµСЂРїР°Р» Р»РёРјРёС‚ Р±РµСЃРїР»Р°С‚РЅС‹С… РіРµРЅРµСЂР°С†РёР№.\nРћС„РѕСЂРјРё РїРѕРґРїРёСЃРєСѓ, С‡С‚РѕР±С‹ РїСЂРѕРґРѕР»Р¶РёС‚СЊ.")
+        await msg.answer("⚠️ Ты исчерпал лимит бесплатных генераций.\nОформи подписку, чтобы продолжить.")
         return
-    await msg.answer("вњЌ Р“РµРЅРµСЂРёСЂСѓСЋ С‚РµРєСЃС‚...")
+    await msg.answer("✍ Генерирую текст...")
     reply = await generate_text(msg.text)
     await msg.answer(reply)
     increment_usage(user_id)
