@@ -90,7 +90,6 @@ def register_handlers(dp: Dispatcher):
         else:
             await msg.answer("🚫 Подписка не найдена или истекла.")
 
-> Любимый Павлик:
 @dp.message_handler()
     async def handle_prompt(msg: types.Message):
         user_id = msg.from_user.id
